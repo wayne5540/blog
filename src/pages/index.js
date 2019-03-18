@@ -32,12 +32,8 @@ class BlogIndex extends React.Component {
                   {title}
                 </Link>
               </h3>
-              <small>{node.createdAt}</small>
-              <p
-                dangerouslySetInnerHTML={{
-                  __html: node.content.childMarkdownRemark.html,
-                }}
-              />
+              <small>{node.publishedAt}</small>
+              <p>{node.summary || node.content.childMarkdownRemark.excerpt}</p>
             </div>
           )
         })}
@@ -55,18 +51,17 @@ export const pageQuery = graphql`
         title
       }
     }
-    allContentfulBlogPost {
+    allContentfulBlogPost(sort: { fields: publishedAt, order: DESC }) {
       edges {
         node {
           title
           slug
           summary
           tags
-          createdAt(formatString: "MMMM DD, YYYY")
-          updatedAt(formatString: "MMMM DD, YYYY")
+          publishedAt(formatString: "MMMM DD, YYYY")
           content {
             childMarkdownRemark {
-              html
+              excerpt
             }
           }
         }
